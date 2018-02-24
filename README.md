@@ -13,15 +13,15 @@ In order to build your cluster you need to:
 * provide your openstack credentials by editting parameter.tvars. The username should be the same as shown in the OTC console. You can not use the email or mobile number, which can also be used to login to the OTC web console. 
 * eventually change values in varaibles.tf according to the comments in this file.
 
-In order to integrate kube-dns with your domain you need to:
-* have a registered Internet domain which uses (delegates to) the following nameservers:
+The testing environment uses public DNS. It is required to have a public domain under control. In order to integrate kube-dns with your public domain you need to:
+  * have a registered Internet domain which uses (delegates to) the following nameservers:
   * ns1.open-telekom-cloud.com.
   * ns2.open-telekom-cloud.com.
 
 Edit kube-centos/variables.tf and set at least the following vars:
 * dnszone - your registered Internet domain. The publicly resolvable cluster domain will be kube.${dnszone}.
 * project - project name. It is used to prefix VM names. It should be unique among OTC as it is used to create names of VMs.
-* public_key_file - the path to to your ssh public key.
+* public_key_file - the path to your ssh public key.
 You can also set the variables specifying the networks to be used (in case of conficts with the existing ones):
 * kube_service_addresses
 * kube_pods_subnet
@@ -36,7 +36,7 @@ terraform apply -var project=example_project -var email=joe@example.com ....
 
 ## Configuring the Ceph cluster
 
-Edit ceph4kube-centos/variables.tf and set the variables for the Ceph cluster. Note that the values of related variables should be the same as for the k8s cluster. 
+Edit ceph4kube-centos/variables.tf and set the variables for the Ceph cluster. Note that the values of related variables (project, dnszone) should be the same as for the k8s cluster. 
 
 ## Running
 Build your k8s cluster issuing:

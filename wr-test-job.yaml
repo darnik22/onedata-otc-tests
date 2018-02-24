@@ -31,8 +31,8 @@ spec:
          - "sh"
          - "-c"
          - >
-           echo Hello 1;
-           until oneclient "/mnt/oneclient" --force-direct-io --monitoring-type graphite --monitoring-level-full --monitoring-period 5 --graphite-url tcp://go-carbon.mon.svc.kube.darosys.pl:2003 --graphite-namespace-prefix "oneclient-${POD_NAME}";
+           echo Hello 1; 
+           until oneclient "/mnt/oneclient" --force-direct-io --monitoring-type graphite --monitoring-level-full --monitoring-period 5 --graphite-url tcp://go-carbon.mon.svc.kube.{{dnszone}}:2003 --graphite-namespace-prefix "oneclient-${POD_NAME}";
            do echo "Waiting for oneprovider (i.e. successful mount)";
            sleep 30;
            done;
