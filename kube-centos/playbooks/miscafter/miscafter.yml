@@ -37,10 +37,6 @@
       run_once: true
       ignore_errors: yes
       shell: kubectl create -f heapster/deploy/kube-config/rbac/heapster-rbac.yaml
-    - name: Add secret for docker.onedata.org
-      run_once: true
-      ignore_errors: yes
-      shell: kubectl create -f playbooks/miscafter/regsecret.yaml
     - name: Add public keys
       authorized_key:
         user: linux

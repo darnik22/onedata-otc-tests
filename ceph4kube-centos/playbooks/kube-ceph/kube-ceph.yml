@@ -62,7 +62,7 @@
         path: /home/linux/scale-3p-land.yaml
         # insertafter: "^[ ]*monitor_ip: "
         regexp: "^[ ]*key: ceph-mon-key"
-        line: "      key: {{lookup('file', '/home/linux/ceph-secret')}}"
+        line: "        key: {{lookup('file', '/home/linux/ceph-secret')}}"
       delegate_to: 127.0.0.1
     - name: Replace tld in landscape
       run_once: true

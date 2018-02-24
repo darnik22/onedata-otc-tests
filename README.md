@@ -64,8 +64,6 @@ scp ubuntu@80.158.20.236:laptop.sh .; ./laptop.sh
 
 Create a SFS (Scalable File Service) share on OTC for the VPC which has been created by terraform. It is called {{project}}-router. Replace {{project}} with the value of project variable you specified earlier. Note the SFS share id and place it in charts/volume-sfs/values.yaml. Eventually modify the size, which defaults to 3T. Do not create volumes with less than 3000GB sizes.
 
-Edit the file scale-3p-land.yaml and change tld to your domain.
-
 ## Grafana
 
 Grafana URL is http://grafana.mon.svc.kube.{{dnszone}}:80/. An active VPN connection is needed to view it. A basic dashboard "oc-trans-rate" has been uploaded. It shows oneclients aggregated read and write rates for ceph. 
@@ -93,6 +91,13 @@ A kubernetes job definition file "wr-test-job.yaml" has been uploaded to the mas
 kubectl create -f wr-test-job.yaml
 ```
 
+## Destruction
+Destroy the infrastructure with "terraform destroy" command. Use the same parameters as for the "terraform apply" command. Destroy in reverse order: the ceph cluster first:
+cd ceph4kube-centos
+terraform destroy -var-file ../parameter.tvars
+cd ../kube-centos
+terraform destroy -var-file ../parameter.tvars
+
 ## Example command flow 
 ```
 eval `ssh-agent`
@@ -103,16 +108,26 @@ vi parameter.tvars
 cd kube-centos
 vi variables.tf
 terraform init
-terraform apply -var-file ../parameter.tvars -var project=myproject -var dnszone=mydnszone
+terraform apply -var-file ../parameter.tvars -var project=myproject -var dnszone=my.domain
 cd ../ceph4kube-centos
 vi variables.tf
 terraform init
-terraform apply -var-file ../parameter.tvars -var project=myproject -var dnszone=mydnszone
-
-ssh -A ubuntu@THE_IP_OF_CTLR_NODE
-kubectl cluster-info
-kubectl get pod
+terraform apply -var-file ../parameter.tvars -var project=myproject -var dnszone=my.domain
+# Create SFS share using OTC Web console
+ssh -A linux@myproject-kube-ctlr.my.domain
+cd ..
+vi charts/volume-sfs/values.yaml
+helm install -f scale-3p-land.yaml charts/cross-support-job-3p -n st
+watch kubectl get pod
+# Copy access token from onezone (https://st-onezone.default.svc.kube.my.domain)
+vi wr-test-job.yaml
+kubectl create -f wr-test-job.yaml
+# Observe grafana (http://grafana.mon.svc.kube.my.domain)
+...
+cd ceph4kube-centos
+terraform destroy -var-file ../parameter.tvars
+cd ../kube-centos
+terraform destroy -var-file ../parameter.tvars
 
 ```
 
-SFS: Create SFS for the VPC after creating infrastructure and before helming a lanscape 
