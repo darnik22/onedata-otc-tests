@@ -93,10 +93,12 @@ kubectl create -f wr-test-job.yaml
 
 ## Destruction
 Destroy the infrastructure with "terraform destroy" command. Use the same parameters as for the "terraform apply" command. Destroy in reverse order: the ceph cluster first:
+```
 cd ceph4kube-centos
 terraform destroy -var-file ../parameter.tvars
 cd ../kube-centos
 terraform destroy -var-file ../parameter.tvars
+```
 
 ## Example command flow 
 ```
