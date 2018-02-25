@@ -131,3 +131,5 @@ terraform destroy -var-file ../parameter.tvars
 
 ```
 
+## Known issues
+The environment is based on IP over IB for transferring data between k8s and ceph. Sometimes the interface ib0 on some VMs does not get up, which causes the scripts to fail. This is a problem with OTC itself. If this happens the VMs with failed ib0 can be restarted, which usually helps. When ib0 gets up the "terraform apply" command can be issued again.

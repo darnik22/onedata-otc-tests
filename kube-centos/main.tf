@@ -163,7 +163,7 @@ resource "null_resource" "provision-kubespray" {
       "sudo pip install --upgrade jinja2",
       "sudo systemctl disable firewalld",
       "sudo systemctl stop firewalld",
-      "cd playbooks; git clone https://github.com/kubernetes-incubator/kubespray.git",
+      "cd playbooks; git clone https://github.com/kubernetes-incubator/kubespray.git; cd ..",
       "ansible-playbook -b -i inventory.ini playbooks/kubespray/cluster.yml -e dashboard_enabled=true -e '{kubeconfig_localhost: true}' -e kube_network_plugin=flannel -e cluster_name=kube.${var.dnszone} -e domain_name=kube.${var.dnszone} -e kube_service_addresses=${var.kube_service_addresses} -e kube_pods_subnet=${var.kube_pods_subnet} -f 50 -T 30"
     ]
   }
